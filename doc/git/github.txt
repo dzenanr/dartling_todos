@@ -29,14 +29,14 @@ Create a New Repo at GitHub
 (without README, since cloning will not be used).
 Repository Name: dartling_todos
 Description: 
-  Todo.Mvc is based on [TodoMVC] (http://todomvc.com).
+  Based on TodoMVC. Adapted for Dartling from TodoMvc in Dart.
       
 Next steps:
   cd git/dart/dartling_spirals/dartling_todos
   git init
   git status
   git add .
-  git commit -m 'initial model version'
+  git commit -m 'initial version'
   git remote add origin https://github.com/dzenanr/dartling_todos.git
   git push -u origin master     
 
