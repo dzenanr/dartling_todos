@@ -1,10 +1,9 @@
 part of todo_mvc_app;
 
 class TodoApp implements ActionReactionApi {
-  DomainSession session;
   Tasks tasks;
 
-  Todos todos = new Todos();
+  Todos todos;
   Element main = query('#main');
   Element completeAll = query('#complete-all');
   Element footer = query('#footer');
@@ -12,17 +11,19 @@ class TodoApp implements ActionReactionApi {
   Element clearCompleted = query('#clear-completed');
 
   TodoApp(TodoModels domain) {
-    session = domain.newSession();
+    DomainSession session = domain.newSession();
     domain.startActionReaction(this);
     MvcEntries model = domain.getModelEntries(TodoRepo.todoMvcModelCode);
     tasks = model.getEntry('Task');
+
+    todos = new Todos(session, tasks);
     //load todos
     String json = window.localStorage['todos'];
     if (json != null) {
       var todoList = JSON.parse(json);
       tasks.fromJson(json);
       for (Task task in tasks) {
-        _add(task);
+        todos.add(task);
       }
       _updateFooter();
     }
@@ -69,66 +70,35 @@ class TodoApp implements ActionReactionApi {
     window.localStorage['todos'] = JSON.stringify(tasks.toJson());
   }
 
-  _add(Task task) {
-    var todo = new Todo(session, tasks, task);
-    todos.add(todo);
-  }
-
-  _remove(Task task) {
-    for (Todo todo in todos) {
-      if (todo.task == task) {
-        todos.remove(todo);
-      }
-    }
-  }
-
-  _completeTodo(Task task) {
-    for (Todo todo in todos) {
-      if (todo.task == task) {
-        todo.complete(task.completed);
-      }
-    }
-  }
-
-  _retitleTodo(Task task) {
-    for (Todo todo in todos) {
-      if (todo.task == task) {
-        todo.retitle(task.title);
-      }
-    }
-  }
-
   _updateFooter() {
-    updateCounts() {
-      var completedLength = tasks.completed.length;
-      var leftLength = tasks.left.length;
-      completeAll.checked = (completedLength == tasks.length);
-      leftCount.innerHTML =
-          '<b>${leftLength}</b> todo${leftLength != 1 ? 's' : ''} left';
-          if (completedLength == 0) {
-            clearCompleted.style.display = 'none';
-          } else {
-            clearCompleted.style.display = 'block';
-            clearCompleted.text = 'Clear completed (${tasks.completed.length})';
-          }
-    }
-
     var display = todos.count == 0 ? 'none' : 'block';
     main.style.display = display;
     footer.style.display = display;
-    updateCounts();
+
+    // update counts
+    var completedLength = tasks.completed.length;
+    var leftLength = tasks.left.length;
+    completeAll.checked = (completedLength == tasks.length);
+    leftCount.innerHTML =
+        '<b>${leftLength}</b> todo${leftLength != 1 ? 's' : ''} left';
+    if (completedLength == 0) {
+      clearCompleted.style.display = 'none';
+    } else {
+      clearCompleted.style.display = 'block';
+      clearCompleted.text = 'Clear completed (${tasks.completed.length})';
+    }
   }
 
   react(BasicAction action) {
     if (action is AddAction) {
-      _add(action.entity);
+      todos.add(action.entity);
     } else if (action is RemoveAction) {
-      _remove(action.entity);
+      todos.remove(action.entity);
     } else if (action is SetAttributeAction) {
       if (action.property == 'completed') {
-        _completeTodo(action.entity);
+        todos.complete(action.entity);
       } else if (action.property == 'title') {
-        _retitleTodo(action.entity);
+        todos.retitle(action.entity);
       }
     }
     _updateFooter();
