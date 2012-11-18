@@ -14,6 +14,8 @@ class Task extends TaskGen {
     }
   }
 
+  bool get left => !completed;
+
   bool get generate =>
       title.contains('generate') ? true : false;
 
@@ -33,8 +35,23 @@ class Tasks extends TasksGen {
 
   Tasks(Concept concept) : super(concept);
 
-  int get completed => select((task) => task.completed).count;
-  int get left => count - completed;
+  Tasks get completed => select((task) => task.completed);
+  Tasks get left => select((task) => task.left);
+
+  fromJson(String json) {
+    try {
+      List jsonList = JSON.parse(json);
+      for (Map todo in jsonList) {
+        var task = new Task(concept);
+        task.fromJson(todo);
+        add(task);
+      }
+    } catch (e) {
+      EntityError error = new EntityError('json');
+      error.message = 'Tasks not created from the JSON text: ${e}';
+      errors.add(error);
+    }
+  }
 
   bool preAdd(Task task) {
     bool validation = super.preAdd(task);

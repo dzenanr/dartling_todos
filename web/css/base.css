@@ -149,7 +149,7 @@ body {
   border-top: 1px dotted #adadad;
 }
 
-#toggle-all-completed {
+#complete-all {
   position: absolute;
   top: -56px;
   left: -15px;
@@ -169,14 +169,14 @@ body {
   transform: rotate(90deg);
 }
 
-#toggle-all-completed:before {
+#complete-all:before {
   content: '»';
   font-size: 28px;
   color: #d9d9d9;
   padding: 0 25px 7px;
 }
 
-#toggle-all-completed:checked:before {
+#complete-all:checked:before {
   color: #737373;
 }
 
@@ -212,7 +212,7 @@ body {
   display: none;
 }
 
-#todo-list li .toggle-completed {
+#todo-list li .completed {
   text-align: center;
   width: 40px;
   height: 40px;
@@ -228,7 +228,7 @@ body {
   appearance: none;
 }
 
-#todo-list li .toggle-completed:after {
+#todo-list li .completed:after {
   font-size: 18px;
   content: '✔';
   line-height: 43px; /* 40 + a couple of pixels visual adjustment */
@@ -237,7 +237,7 @@ body {
   text-shadow: 0 -1px 0 #bfbfbf;
 }
 
-#todo-list li .toggle-completed:checked:after {
+#todo-list li .completed:checked:after {
   color: #85ada7;
   text-shadow: 0 1px 0 #669991;
   bottom: 1px;
@@ -395,8 +395,8 @@ body {
   Can't use it globally since it removes checkboxes in Firefox and Opera
 */
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-  #toggle-all-completed,
-  #todo-list li .toggle-completed {
+  #complete-all,
+  #todo-list li .completed {
     background: none;
   }
 }

@@ -45,5 +45,6 @@ import "package:dartling/dartling_app.dart";
 import "package:todo_mvc/todo_mvc.dart";
 
 // added by hand
-part 'app/todo.dart';
+part 'app/todo_app.dart';
 part 'app/todos.dart';
+part 'app/todo.dart';
