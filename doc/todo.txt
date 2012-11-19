@@ -1,7 +1,16 @@
 Todo
 
-+ return to focus on new todo after various actions
-+ replace preAdd with set validation for title length
 + make a transaction for clear all
-+ make title the id
-+ add tests for id 
++ make title the id (?)
++ add tests for id (?) 
+
+Dartling
+
++ from json to entities
+
++ replace preAdd with set validation for title length
+* SetAttributeAction does not call the specific set method.
+  Thus, even if you write a validation in the specific method,
+  it will not be used by Dartling. In future, the reflection will
+  solve this problem.
+

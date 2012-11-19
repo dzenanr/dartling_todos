@@ -103,6 +103,32 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(task, isNotNull);
       expect(task.title, equals(title));
     });
+    test('Find Task by Attribute and Update Title', () {
+      var title = 'generate json from the model';
+      var task = tasks.findByAttribute('title', title);
+      expect(task, isNotNull);
+      expect(task.title, equals(title));
+      var newTitle = 'from the model generate json';
+      task.title = newTitle;
+      expect(task.title, equals(newTitle));
+    });
+    test('Find Task by Attribute and Update Title with Too Long Text', () {
+      var title = 'generate json from the model';
+      var task = tasks.findByAttribute('title', title);
+      expect(task, isNotNull);
+      expect(task.title, equals(title));
+      var newTitle =
+          'from the model generate json, '
+          'but before that check if you have entry points to the model';
+      task.title = newTitle;
+      /* SetAttributeAction does not call the specific set method.
+       * Thus, even if you write a validation in the specific method,
+       * it will not be used by Dartling. In future, the reflection will
+       * solve this problem.
+       */
+      // expect(task.title, equals(title));
+      expect(task.title, equals(newTitle));
+    });
     test('Random Task', () {
       var task1 = tasks.random();
       expect(task1, isNotNull);

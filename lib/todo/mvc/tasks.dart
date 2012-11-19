@@ -6,6 +6,10 @@ class Task extends TaskGen {
 
   Task(Concept concept) : super(concept);
 
+  bool get left => !completed;
+  bool get generate =>
+      title.contains('generate') ? true : false;
+
   fromJson(Map json) {
     title = json['title'];
     String completedString = json['completed'];
@@ -13,11 +17,6 @@ class Task extends TaskGen {
       completed = true;
     }
   }
-
-  bool get left => !completed;
-
-  bool get generate =>
-      title.contains('generate') ? true : false;
 
   /**
    * Compares two tasks based on the title.
@@ -61,24 +60,11 @@ class Tasks extends TasksGen {
         var error = new EntityError('pre');
         error.message =
             '${concept.codePlural}.preAdd rejects the "${task.title}" '
-            'title that is longer than 64.';
+            'title, because it is longer than 64.';
         errors.add(error);
       }
     }
     return validation;
-  }
-
-  String errorMessage() {
-    if (errors.count > 0) {
-      List<EntityError> errorList = errors.list;
-      var msgs = '';
-      for (var error in errorList) {
-        msgs = '${msgs} \n ${error.category}: ${error.message}';
-      }
-      return msgs;
-    } else {
-      return '';
-    }
   }
 
 }

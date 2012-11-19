@@ -4,14 +4,14 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
   DomainSession session;
   Tasks tasks;
 
-  Todos todos;
-  Element main = query('#main');
-  Element completeAll = query('#complete-all');
-  Element footer = query('#footer');
-  Element leftCount = query('#left-count');
-  Element clearCompleted = query('#clear-completed');
-  Element undo = query('#undo');
-  Element redo = query('#redo');
+  Todos _todos;
+  Element _main = query('#main');
+  Element _completeAll = query('#complete-all');
+  Element _footer = query('#footer');
+  Element _leftCount = query('#left-count');
+  Element _clearCompleted = query('#clear-completed');
+  Element _undo = query('#undo');
+  Element _redo = query('#redo');
   Element errors = query('#errors');
 
   TodoApp(TodoModels domain) {
@@ -21,14 +21,14 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     MvcEntries model = domain.getModelEntries(TodoRepo.todoMvcModelCode);
     tasks = model.getEntry('Task');
 
-    todos = new Todos(this);
+    _todos = new Todos(this);
     //load todos
     String json = window.localStorage['todos'];
     if (json != null) {
       var todoList = JSON.parse(json);
       tasks.fromJson(json);
       for (Task task in tasks) {
-        todos.add(task);
+        _todos.add(task);
       }
       _updateFooter();
       _possibleErrors();
@@ -48,7 +48,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
       }
     });
 
-    completeAll.on.click.add((Event e) {
+    _completeAll.on.click.add((Event e) {
       if (tasks.left.length == 0) {
         for (Task task in tasks) {
           new SetAttributeAction(session, task, 'completed', false).doit();
@@ -60,25 +60,26 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
       }
     });
 
-    clearCompleted.on.click.add((MouseEvent e) {
+    _clearCompleted.on.click.add((MouseEvent e) {
       for (Task task in tasks.completed) {
         new RemoveAction(session, tasks.completed, task).doit();
       }
     });
 
-    undo.style.display = 'none';
-    undo.on.click.add((MouseEvent e) {
+    _undo.style.display = 'none';
+    _undo.on.click.add((MouseEvent e) {
       session.past.undo();
     });
 
-    redo.style.display = 'none';
-    redo.on.click.add((MouseEvent e) {
+    _redo.style.display = 'none';
+    _redo.on.click.add((MouseEvent e) {
       session.past.redo();
     });
   }
 
   _possibleErrors() {
-    errors.innerHTML = tasks.errors.toString();
+    errors.innerHTML =
+        '<p>${tasks.errors.toString()}</p><p>${errors.innerHTML}</p>';
     tasks.errors.clear();
   }
 
@@ -88,42 +89,42 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
 
   _updateFooter() {
     var display = tasks.count == 0 ? 'none' : 'block';
-    completeAll.style.display = display;
-    main.style.display = display;
-    footer.style.display = display;
+    _completeAll.style.display = display;
+    _main.style.display = display;
+    _footer.style.display = display;
 
     // update counts
     var completedLength = tasks.completed.length;
     var leftLength = tasks.left.length;
-    completeAll.checked = (completedLength == tasks.length);
-    leftCount.innerHTML =
+    _completeAll.checked = (completedLength == tasks.length);
+    _leftCount.innerHTML =
         '<b>${leftLength}</b> todo${leftLength != 1 ? 's' : ''} left';
     if (completedLength == 0) {
-      clearCompleted.style.display = 'none';
+      _clearCompleted.style.display = 'none';
     } else {
-      clearCompleted.style.display = 'block';
-      clearCompleted.text = 'Clear completed (${tasks.completed.length})';
+      _clearCompleted.style.display = 'block';
+      _clearCompleted.text = 'Clear completed (${tasks.completed.length})';
     }
   }
 
   react(BasicAction action) {
     if (action is AddAction) {
-      if (action.state == 'undone') {
-        todos.remove(action.entity);
+      if (action.undone) {
+        _todos.remove(action.entity);
       } else {
-        todos.add(action.entity);
+        _todos.add(action.entity);
       }
     } else if (action is RemoveAction) {
-      if (action.state == 'undone') {
-        todos.add(action.entity);
+      if (action.undone) {
+        _todos.add(action.entity);
       } else {
-        todos.remove(action.entity);
+        _todos.remove(action.entity);
       }
     } else if (action is SetAttributeAction) {
       if (action.property == 'completed') {
-        todos.complete(action.entity);
+        _todos.complete(action.entity);
       } else if (action.property == 'title') {
-        todos.retitle(action.entity);
+        _todos.retitle(action.entity);
       }
     }
     _updateFooter();
@@ -131,19 +132,19 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
   }
 
   reactCannotUndo() {
-    undo.style.display = 'none';
+    _undo.style.display = 'none';
   }
 
   reactCanUndo() {
-    undo.style.display = 'block';
+    _undo.style.display = 'block';
   }
 
   reactCanRedo() {
-    redo.style.display = 'block';
+    _redo.style.display = 'block';
   }
 
   reactCannotRedo() {
-    redo.style.display = 'none';
+    _redo.style.display = 'none';
   }
 
 }

@@ -13,7 +13,7 @@ var todoMvcModelJson = r'''
 {
     "width":990,
     "lines":[
-        
+
     ],
     "height":580,
     "boxes":[
