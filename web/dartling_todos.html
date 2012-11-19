@@ -9,6 +9,8 @@
 <body>
   <section id="todo-app">
     <header id="header">
+      <button id="redo" class="todo-button">Redo</button>
+      <button id="undo" class="todo-button">Undo</button>
       <h1>todos</h1>
       <input id="new-todo" placeholder="What needs to be done?" autofocus>
     </header>
@@ -18,10 +20,22 @@
     </section>
     <footer id="footer">
       <span id="left-count"><strong>0</strong> item left</span>
-      <button id="clear-completed">Clear completed</button>
+      <ul id="filters">
+        <li>
+          <a class="selected" href="#/">All</a>
+        </li>
+        <li>
+          <a href="#/left">Left</a>
+        </li>
+        <li>
+          <a href="#/completed">Completed</a>
+        </li>
+      </ul>
+      <button id="clear-completed" class="todo-button">Clear completed</button>
     </footer>
   </section>
   <footer id="info">
+    <p id="errors"></p>
     <p>double-click to edit a todo</p>
     <p>adapted from
       <a href="https://github.com/MathieuLorber/todomvc">

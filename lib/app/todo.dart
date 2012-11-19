@@ -1,6 +1,7 @@
 part of todo_mvc_app;
 
 class Todo {
+  TodoApp todoApp;
   DomainSession session;
   Tasks tasks;
   Task task;
@@ -9,7 +10,10 @@ class Todo {
   Element completed;
   Element title;
 
-  Todo(this.session, this.tasks, this.task);
+  Todo(this.todoApp, this.task) {
+    session = todoApp.session;
+    tasks = todoApp.tasks;
+  }
 
   Element create() {
     todo = new Element.html('''
@@ -73,6 +77,10 @@ class Todo {
   retitle(String newTitle) {
     title.text = newTitle;
     todo.classes.remove('editing');
+  }
+
+  set visible(bool visible) {
+    todo.style.display = visible ? 'block' : 'none';
   }
 
 }

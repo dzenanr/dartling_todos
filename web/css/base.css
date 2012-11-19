@@ -361,19 +361,20 @@ body {
   font-weight: bold;
 }
 
-#clear-completed {
+.todo-button {
   float: right;
   position: relative;
   line-height: 20px;
   text-decoration: none;
   background: rgba(0, 0, 0, 0.1);
-  font-size: 11px;
+  font-size: 12px;
+  margin-left: 4px;
   padding: 0 10px;
   border-radius: 3px;
   box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.2);
 }
 
-#clear-completed:hover {
+.todo-button:hover {
   background: rgba(0, 0, 0, 0.15);
   box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.3);
 }
@@ -388,6 +389,11 @@ body {
 
 #info a {
   color: inherit;
+}
+
+#errors {
+  background-color: white;
+  font-size: 18px;
 }
 
 /*

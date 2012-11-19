@@ -68,4 +68,17 @@ class Tasks extends TasksGen {
     return validation;
   }
 
+  String errorMessage() {
+    if (errors.count > 0) {
+      List<EntityError> errorList = errors.list;
+      var msgs = '';
+      for (var error in errorList) {
+        msgs = '${msgs} \n ${error.category}: ${error.message}';
+      }
+      return msgs;
+    } else {
+      return '';
+    }
+  }
+
 }

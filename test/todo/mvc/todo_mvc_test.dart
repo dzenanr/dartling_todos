@@ -46,6 +46,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(tasks.empty, isTrue);
       count = 0;
     });
+    /*
     test('Empty Entries Test', () {
       entries.clear();
       expect(entries.empty, isTrue);
@@ -167,20 +168,20 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       copiedTasks.display(title:'Copied Tasks');
     });
     test('Copy Equality', () {
-      var doc = new Task(concept);
-      expect(doc, isNotNull);
-      doc.title = 'writing a tutorial on Dartling';
-      tasks.add(doc);
+      var task = new Task(concept);
+      expect(task, isNotNull);
+      task.title = 'writing a tutorial on Dartling';
+      tasks.add(task);
       expect(tasks.count, equals(++count));
 
-      doc.display(prefix:'before copy: ');
-      var copiedDoc = doc.copy();
+      task.display(prefix:'before copy: ');
+      var copiedDoc = task.copy();
       copiedDoc.display(prefix:'after copy: ');
-      expect(doc, equals(copiedDoc));
-      expect(doc.oid, equals(copiedDoc.oid));
-      expect(doc.code, equals(copiedDoc.code));
-      expect(doc.title, equals(copiedDoc.title));
-      expect(doc.completed, equals(copiedDoc.completed));
+      expect(task, equals(copiedDoc));
+      expect(task.oid, equals(copiedDoc.oid));
+      expect(task.code, equals(copiedDoc.code));
+      expect(task.title, equals(copiedDoc.title));
+      expect(task.completed, equals(copiedDoc.completed));
     });
 
     test('True for Every Task', () {
@@ -189,26 +190,26 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
     });
 
     test('Update New Project Description with Failure', () {
-      var doc = new Task(concept);
-      expect(doc, isNotNull);
-      doc.title = 'writing a tutorial on Dartling';
-      tasks.add(doc);
+      var task = new Task(concept);
+      expect(task, isNotNull);
+      task.title = 'writing a tutorial on Dartling';
+      tasks.add(task);
       expect(tasks.count, equals(++count));
 
-      var copiedDoc = doc.copy();
+      var copiedDoc = task.copy();
       copiedDoc.title = 'writing a paper on Dartling';
       // Entities.update can only be used if oid, generate or id set.
-      expect(() => tasks.update(doc, copiedDoc), throws);
+      expect(() => tasks.update(task, copiedDoc), throws);
     });
 
     test('New Task Undo and Redo', () {
-      var doc = new Task(concept);
-      expect(doc, isNotNull);
-      doc.title = 'writing a tutorial on Dartling';
-      tasks.add(doc);
+      var task = new Task(concept);
+      expect(task, isNotNull);
+      task.title = 'writing a tutorial on Dartling';
+      tasks.add(task);
       expect(tasks.count, equals(++count));
 
-      var action = new AddAction(session, tasks, doc);
+      var action = new AddAction(session, tasks, task);
       action.doit();
       expect(tasks.count, equals(++count));
 
@@ -219,13 +220,13 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(tasks.count, equals(++count));
     });
     test('New Task Undo and Redo with Session', () {
-      var doc = new Task(concept);
-      expect(doc, isNotNull);
-      doc.title = 'writing a tutorial on Dartling';
-      tasks.add(doc);
+      var task = new Task(concept);
+      expect(task, isNotNull);
+      task.title = 'writing a tutorial on Dartling';
+      tasks.add(task);
       expect(tasks.count, equals(++count));
 
-      var action = new AddAction(session, tasks, doc);
+      var action = new AddAction(session, tasks, task);
       action.doit();
       expect(tasks.count, equals(++count));
 
@@ -235,6 +236,41 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       session.past.redo();
       expect(tasks.count, equals(++count));
     });
+    */
+    test('Task Actions with Multiple Undos and Redos', () {
+      var task1 = new Task(concept);
+      task1.title = 'writing a tutorial on Dartling';
+
+      var action1 = new AddAction(session, tasks, task1);
+      action1.doit();
+      expect(tasks.count, equals(++count));
+
+      var task2 = new Task(concept);
+      task2.title = 'preparing a course lecture on DOM';
+
+      var action2 = new AddAction(session, tasks, task2);
+      action2.doit();
+      expect(tasks.count, equals(++count));
+
+      //session.past.display();
+
+      session.past.undo();
+      expect(tasks.count, equals(--count));
+      session.past.display();
+
+      session.past.undo();
+      expect(tasks.count, equals(--count));
+      session.past.display();
+
+      session.past.redo();
+      expect(tasks.count, equals(++count));
+      session.past.display();
+
+      session.past.redo();
+      expect(tasks.count, equals(++count));
+      session.past.display();
+    });
+    /*
     test('Undo and Redo Update Task Title', () {
       var title = 'generate json from the model';
       var task = tasks.findByAttribute('title', title);
@@ -301,7 +337,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(reaction.reactedOnUpdate, isTrue);
       models.cancelActionReaction(reaction);
     });
-
+*/
   });
 }
 
