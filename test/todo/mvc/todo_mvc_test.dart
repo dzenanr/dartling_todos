@@ -46,7 +46,6 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(tasks.empty, isTrue);
       count = 0;
     });
-    /*
     test('Empty Entries Test', () {
       entries.clear();
       expect(entries.empty, isTrue);
@@ -236,7 +235,6 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       session.past.redo();
       expect(tasks.count, equals(++count));
     });
-    */
     test('Task Actions with Multiple Undos and Redos', () {
       var task1 = new Task(concept);
       task1.title = 'writing a tutorial on Dartling';
@@ -270,7 +268,6 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(tasks.count, equals(++count));
       session.past.display();
     });
-    /*
     test('Undo and Redo Update Task Title', () {
       var title = 'generate json from the model';
       var task = tasks.findByAttribute('title', title);
@@ -337,7 +334,6 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(reaction.reactedOnUpdate, isTrue);
       models.cancelActionReaction(reaction);
     });
-*/
   });
 }
 

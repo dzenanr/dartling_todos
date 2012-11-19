@@ -31,7 +31,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
         todos.add(task);
       }
       _updateFooter();
-      displayErrorsIfAny();
+      _possibleErrors();
     }
 
     Element newTodo = query('#new-todo');
@@ -42,9 +42,8 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
           var task = new Task(tasks.concept);
           task.title = title;
           newTodo.value = '';
-          var action = new AddAction(session, tasks, task);
-          action.doit();
-          displayErrorsIfAny();
+          new AddAction(session, tasks, task).doit();
+          _possibleErrors();
         }
       }
     });
@@ -52,23 +51,18 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     completeAll.on.click.add((Event e) {
       if (tasks.left.length == 0) {
         for (Task task in tasks) {
-          var action = new SetAttributeAction(
-              session, task, 'completed', false);
-          action.doit();
+          new SetAttributeAction(session, task, 'completed', false).doit();
         }
       } else {
         for (Task task in tasks.left) {
-          var action = new SetAttributeAction(
-              session, task, 'completed', true);
-          action.doit();
+          new SetAttributeAction(session, task, 'completed', true).doit();
         }
       }
     });
 
     clearCompleted.on.click.add((MouseEvent e) {
       for (Task task in tasks.completed) {
-        var action = new RemoveAction(session, tasks.completed, task);
-        action.doit();
+        new RemoveAction(session, tasks.completed, task).doit();
       }
     });
 
@@ -83,7 +77,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     });
   }
 
-  displayErrorsIfAny() {
+  _possibleErrors() {
     errors.innerHTML = tasks.errors.toString();
     tasks.errors.clear();
   }
@@ -114,14 +108,12 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
 
   react(BasicAction action) {
     if (action is AddAction) {
-      _displayAction(action);
       if (action.state == 'undone') {
         todos.remove(action.entity);
       } else {
         todos.add(action.entity);
       }
     } else if (action is RemoveAction) {
-      _displayAction(action);
       if (action.state == 'undone') {
         todos.add(action.entity);
       } else {
@@ -152,26 +144,6 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
 
   reactCannotRedo() {
     redo.style.display = 'none';
-  }
-
-  _displayAction(BasicAction action) {
-    if (action is AddAction) {
-      Task task = action.entity;
-      task.display(prefix: 'add');
-      AddAction addAction = action;
-      print(addAction.toString());
-    } else if (action is RemoveAction) {
-      Task task = action.entity;
-      task.display(prefix: 'remove');
-      RemoveAction removeAction = action;
-      print(removeAction.toString());
-    } else if (action is SetAttributeAction) {
-      if (action.property == 'completed') {
-        todos.complete(action.entity);
-      } else if (action.property == 'title') {
-        todos.retitle(action.entity);
-      }
-    }
   }
 
 }

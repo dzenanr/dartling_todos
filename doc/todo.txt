@@ -1,0 +1,7 @@
+Todo
+
++ return to focus on new todo after various actions
++ replace preAdd with set validation for title length
++ make a transaction for clear all
++ make title the id
++ add tests for id 

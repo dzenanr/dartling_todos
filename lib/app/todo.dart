@@ -39,23 +39,18 @@ class Todo {
       if (e.keyCode == KeyCode.ENTER) {
         var title = edit.value.trim();
         if (title != '') {
-          var action = new SetAttributeAction(
-              session, task, 'title', title);
-          action.doit();
+          new SetAttributeAction(session, task, 'title', title).doit();
         }
       }
     });
 
     completed = todo.query('.completed');
     completed.on.click.add((MouseEvent e) {
-      var action = new SetAttributeAction(
-          session, task, 'completed', !task.completed);
-      action.doit();
+      new SetAttributeAction(session, task, 'completed', !task.completed).doit();
     });
 
     todo.query('.remove').on.click.add((MouseEvent e) {
-      var action = new RemoveAction(session, tasks, task);
-      action.doit();
+      var action = new RemoveAction(session, tasks, task).doit();
     });
 
     return todo;
