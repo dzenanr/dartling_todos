@@ -13,6 +13,7 @@ abstract class TaskGen extends ConceptEntity<Task> {
   set completed(bool a) => setAttribute("completed", a);
 
   Task newEntity() => new Task(concept);
+  Tasks newEntities() => new Tasks(concept);
 
 }
 
@@ -21,5 +22,6 @@ abstract class TasksGen extends Entities<Task> {
   TasksGen(Concept concept) : super.of(concept);
 
   Tasks newEntities() => new Tasks(concept);
+  Task newEntity() => new Task(concept);
 
 }

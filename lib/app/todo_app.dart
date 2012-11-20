@@ -12,7 +12,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
   Element _clearCompleted = query('#clear-completed');
   Element _undo = query('#undo');
   Element _redo = query('#redo');
-  Element errors = query('#errors');
+  Element _errors = query('#errors');
 
   TodoApp(TodoModels domain) {
     session = domain.newSession();
@@ -25,13 +25,11 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     //load todos
     String json = window.localStorage['todos'];
     if (json != null) {
-      var todoList = JSON.parse(json);
-      tasks.fromJson(json);
+      tasks.fromJson(JSON.parse(json));
       for (Task task in tasks) {
         _todos.add(task);
       }
       _updateFooter();
-      _possibleErrors();
     }
 
     Element newTodo = query('#new-todo');
@@ -49,15 +47,19 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     });
 
     _completeAll.on.click.add((Event e) {
+      var transaction = new Transaction('complete-all', session);
       if (tasks.left.length == 0) {
         for (Task task in tasks) {
-          new SetAttributeAction(session, task, 'completed', false).doit();
+          transaction.add(
+              new SetAttributeAction(session, task, 'completed', false));
         }
       } else {
         for (Task task in tasks.left) {
-          new SetAttributeAction(session, task, 'completed', true).doit();
+          transaction.add(
+              new SetAttributeAction(session, task, 'completed', true));
         }
       }
+      transaction.doit();
     });
 
     _clearCompleted.on.click.add((MouseEvent e) {
@@ -77,14 +79,13 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     });
   }
 
-  _possibleErrors() {
-    errors.innerHTML =
-        '<p>${tasks.errors.toString()}</p><p>${errors.innerHTML}</p>';
-    tasks.errors.clear();
-  }
-
   _save() {
     window.localStorage['todos'] = JSON.stringify(tasks.toJson());
+  }
+
+  _possibleErrors() {
+    _errors.innerHTML = '<p>${tasks.errors.toString()}</p>';
+    tasks.errors.clear();
   }
 
   _updateFooter() {
@@ -105,9 +106,19 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
       _clearCompleted.style.display = 'block';
       _clearCompleted.text = 'Clear completed (${tasks.completed.length})';
     }
+
+    _possibleErrors();
   }
 
-  react(BasicAction action) {
+  react(ActionApi action) {
+    updateTodo(SetAttributeAction action) {
+      if (action.property == 'completed') {
+        _todos.complete(action.entity);
+      } else if (action.property == 'title') {
+        _todos.retitle(action.entity);
+      }
+    }
+
     if (action is AddAction) {
       if (action.undone) {
         _todos.remove(action.entity);
@@ -121,12 +132,15 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
         _todos.remove(action.entity);
       }
     } else if (action is SetAttributeAction) {
-      if (action.property == 'completed') {
-        _todos.complete(action.entity);
-      } else if (action.property == 'title') {
-        _todos.retitle(action.entity);
+      updateTodo(action);
+    } else if (action is Transaction) {
+      for (var transactionAction in action.past.actions) {
+        if (transactionAction is SetAttributeAction) {
+          updateTodo(transactionAction);
+        }
       }
     }
+
     _updateFooter();
     _save();
   }

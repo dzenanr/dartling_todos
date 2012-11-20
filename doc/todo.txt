@@ -1,12 +1,12 @@
 Todo
 
-+ make a transaction for clear all
++ when a toodo is longer than close to 60 characters,
+  the complete all does not work on that lengthy todo!?
+  (something with css?)
 + make title the id (?)
 + add tests for id (?) 
 
 Dartling
-
-+ from json to entities
 
 + replace preAdd with set validation for title length
 * SetAttributeAction does not call the specific set method.

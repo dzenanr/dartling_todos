@@ -1,7 +1,6 @@
 part of todo_mvc_app;
 
 class Todo {
-  TodoApp _todoApp;
   Task task;
 
   DomainSession _session;
@@ -11,9 +10,9 @@ class Todo {
   Element _completed;
   Element _title;
 
-  Todo(this._todoApp, this.task) {
-    _session = _todoApp.session;
-    _tasks = _todoApp.tasks;
+  Todo(TodoApp todoApp, this.task) {
+    _session = todoApp.session;
+    _tasks = todoApp.tasks;
   }
 
   Element create() {
@@ -42,7 +41,6 @@ class Todo {
         var value = edit.value.trim();
         if (value != '') {
           new SetAttributeAction(_session, task, 'title', value).doit();
-          _possibleErrors();
         }
       }
     });
@@ -58,13 +56,6 @@ class Todo {
     });
 
     return _todo;
-  }
-
-  _possibleErrors() {
-    print(task.errors.toString());
-    _todoApp.errors.innerHTML =
-        '<p>${task.errors.toString()}</p><p>${_todoApp.errors.innerHTML}</p>';
-    task.errors.clear();
   }
 
   remove() {

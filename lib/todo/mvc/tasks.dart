@@ -10,14 +10,6 @@ class Task extends TaskGen {
   bool get generate =>
       title.contains('generate') ? true : false;
 
-  fromJson(Map json) {
-    title = json['title'];
-    String completedString = json['completed'];
-    if (completedString.trim() == 'true') {
-      completed = true;
-    }
-  }
-
   /**
    * Compares two tasks based on the title.
    * If the result is less than 0 then the first entity is less than the second,
@@ -36,21 +28,6 @@ class Tasks extends TasksGen {
 
   Tasks get completed => select((task) => task.completed);
   Tasks get left => select((task) => task.left);
-
-  fromJson(String json) {
-    try {
-      List jsonList = JSON.parse(json);
-      for (Map todo in jsonList) {
-        var task = new Task(concept);
-        task.fromJson(todo);
-        add(task);
-      }
-    } catch (e) {
-      EntityError error = new EntityError('json');
-      error.message = 'Tasks not created from the JSON text: ${e}';
-      errors.add(error);
-    }
-  }
 
   bool preAdd(Task task) {
     bool validation = super.preAdd(task);
