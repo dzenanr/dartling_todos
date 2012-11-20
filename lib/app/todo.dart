@@ -19,7 +19,7 @@ class Todo {
     _todo = new Element.html('''
       <li ${task.completed ? 'class="completed"' : ''}>
         <div class='view'>
-          <input class='completed' type='checkbox' 
+          <input class='completed' type='checkbox'
             ${task.completed ? 'checked' : ''}>
           <label id='title'>${task.title}</label>
           <button class='remove'></button>
