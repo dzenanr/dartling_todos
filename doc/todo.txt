@@ -3,6 +3,7 @@ Todo
 + when a toodo is longer than close to 60 characters,
   the complete all does not work on that lengthy todo!?
   (something with css?)
++ transaction for clear completed
 + make title the id (?)
 + add tests for id (?) 
 
