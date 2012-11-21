@@ -63,9 +63,12 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     });
 
     _clearCompleted.on.click.add((MouseEvent e) {
+      var transaction = new Transaction('clear-completed', session);
       for (Task task in tasks.completed) {
-        new RemoveAction(session, tasks.completed, task).doit();
+        transaction.add(
+            new RemoveAction(session, tasks.completed, task));
       }
+      transaction.doit();
     });
 
     _undo.style.display = 'none';
@@ -119,7 +122,19 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
       }
     }
 
-    if (action is AddAction) {
+    if (action is Transaction) {
+      for (var transactionAction in action.past.actions) {
+        if (transactionAction is SetAttributeAction) {
+          updateTodo(transactionAction);
+        } else if (transactionAction is RemoveAction) {
+          if (transactionAction.undone) {
+            _todos.add(transactionAction.entity);
+          } else {
+            _todos.remove(transactionAction.entity);
+          }
+        }
+      }
+    } else if (action is AddAction) {
       if (action.undone) {
         _todos.remove(action.entity);
       } else {
@@ -133,12 +148,6 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
       }
     } else if (action is SetAttributeAction) {
       updateTodo(action);
-    } else if (action is Transaction) {
-      for (var transactionAction in action.past.actions) {
-        if (transactionAction is SetAttributeAction) {
-          updateTodo(transactionAction);
-        }
-      }
     }
 
     _updateFooter();

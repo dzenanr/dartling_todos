@@ -34,10 +34,10 @@ class Tasks extends TasksGen {
     if (validation) {
       validation = task.title.length <= 64;
       if (!validation) {
-        var error = new EntityError('pre');
+        var error = new ValidationError('pre');
         error.message =
-            '${concept.codePlural}.preAdd rejects the "${task.title}" '
-            'title, because it is longer than 64.';
+            '${concept.codePlural}.preAdd rejects the "${task.title}" title, '
+            'because it is longer than 64.';
         errors.add(error);
       }
     }
