@@ -6,6 +6,7 @@ class Task extends TaskGen {
 
   Task(Concept concept) : super(concept);
 
+  // begin: added by hand
   bool get left => !completed;
   bool get generate =>
       title.contains('generate') ? true : false;
@@ -19,6 +20,7 @@ class Task extends TaskGen {
   int compareTo(Task other) {
     return title.compareTo(other.title);
   }
+  // end: added by hand
 
 }
 
@@ -26,6 +28,7 @@ class Tasks extends TasksGen {
 
   Tasks(Concept concept) : super(concept);
 
+  // begin: added by hand
   Tasks get completed => select((task) => task.completed);
   Tasks get left => select((task) => task.left);
 
@@ -43,5 +46,6 @@ class Tasks extends TasksGen {
     }
     return validation;
   }
+  // end: added by hand
 
 }
