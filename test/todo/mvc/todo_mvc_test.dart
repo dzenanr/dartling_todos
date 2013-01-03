@@ -103,32 +103,6 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(task, isNotNull);
       expect(task.title, equals(title));
     });
-    test('Find Task by Attribute and Update Title', () {
-      var title = 'generate json from the model';
-      var task = tasks.findByAttribute('title', title);
-      expect(task, isNotNull);
-      expect(task.title, equals(title));
-      var newTitle = 'from the model generate json';
-      task.title = newTitle;
-      expect(task.title, equals(newTitle));
-    });
-    test('Find Task by Attribute and Update Title with Too Long Text', () {
-      var title = 'generate json from the model';
-      var task = tasks.findByAttribute('title', title);
-      expect(task, isNotNull);
-      expect(task.title, equals(title));
-      var newTitle =
-          'from the model generate json, '
-          'but before that check if you have entry points to the model';
-      task.title = newTitle;
-      /* SetAttributeAction does not call the specific set method.
-       * Thus, even if you write a validation in the specific method,
-       * it will not be used by Dartling. In future, the reflection will
-       * solve this problem.
-       */
-      // expect(task.title, equals(title));
-      expect(task.title, equals(newTitle));
-    });
     test('Random Task', () {
       var task1 = tasks.random();
       expect(task1, isNotNull);
@@ -173,7 +147,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(tasks.count, equals(--count));
     });
     test('Order Tasks by Title', () {
-      Tasks orderedTasks =tasks.order();
+      Tasks orderedTasks = tasks.order();
       expect(orderedTasks.empty, isFalse);
       expect(orderedTasks.count, equals(tasks.count));
       expect(orderedTasks.source.empty, isFalse);
@@ -200,13 +174,14 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(tasks.count, equals(++count));
 
       task.display(prefix:'before copy: ');
-      var copiedDoc = task.copy();
-      copiedDoc.display(prefix:'after copy: ');
-      expect(task, equals(copiedDoc));
-      expect(task.oid, equals(copiedDoc.oid));
-      expect(task.code, equals(copiedDoc.code));
-      expect(task.title, equals(copiedDoc.title));
-      expect(task.completed, equals(copiedDoc.completed));
+      var copiedTask = task.copy();
+      copiedTask.display(prefix:'after copy: ');
+      expect(task, isNot(same(copiedTask)));
+      expect(task, equals(copiedTask));
+      expect(task.oid, equals(copiedTask.oid));
+      expect(task.code, equals(copiedTask.code));
+      expect(task.title, equals(copiedTask.title));
+      expect(task.completed, equals(copiedTask.completed));
     });
 
     test('True for Every Task', () {
@@ -214,25 +189,67 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(tasks.every((t) => t.title != null), isTrue);
     });
 
-    test('Update New Project Description with Failure', () {
+    test('Find Task then Set Oid with Failure', () {
+      var title = 'generate json from the model';
+      var task = tasks.findByAttribute('title', title);
+      expect(task, isNotNull);
+      expect(() => task.oid = new Oid.ts(1345648254063), throws);
+    });
+    test('Find Task then Set Oid with Success', () {
+      var title = 'generate json from the model';
+      var task = tasks.findByAttribute('title', title);
+      expect(task, isNotNull);
+      task.display(prefix:'before oid set: ');
+      task.concept.updateOid = true;
+      task.oid = new Oid.ts(1345648254063);
+      task.concept.updateOid = false;
+      task.display(prefix:'after oid set: ');
+    });
+    test('Update New Task Title with Failure', () {
       var task = new Task(concept);
       expect(task, isNotNull);
       task.title = 'writing a tutorial on Dartling';
       tasks.add(task);
       expect(tasks.count, equals(++count));
 
-      var copiedDoc = task.copy();
-      copiedDoc.title = 'writing a paper on Dartling';
-      // Entities.update can only be used if oid, generate or id set.
-      expect(() => tasks.update(task, copiedDoc), throws);
+      var copiedTask = task.copy();
+      copiedTask.title = 'writing a paper on Dartling';
+      // Entities.update can only be used if oid, code or id set.
+      expect(() => tasks.update(task, copiedTask), throws);
+    });
+    test('Update New Task Oid with Success', () {
+      var task = new Task(concept);
+      expect(task, isNotNull);
+      task.title = 'writing a tutorial on Dartling';
+      tasks.add(task);
+      expect(tasks.count, equals(++count));
+
+      var copiedTask = task.copy();
+      copiedTask.concept.updateOid = true;
+      copiedTask.oid = new Oid.ts(1345648254063);
+      copiedTask.concept.updateOid = false;
+      // Entities.update can only be used if oid, code or id set.
+      tasks.update(task, copiedTask);
+      var foundTask = tasks.findByAttribute('title', task.title);
+      expect(foundTask, isNotNull);
+      expect(foundTask.oid, equals(copiedTask.oid));
+      // Entities.update removes the before update entity and
+      // adds the after update entity,
+      // in order to update oid, code and id entity maps.
+      expect(task.oid, isNot(equals(copiedTask.oid)));
+    });
+    test('Find Task by Attribute then Examine Code and Id', () {
+      var title = 'generate json from the model';
+      var task = tasks.findByAttribute('title', title);
+      expect(task, isNotNull);
+      expect(task.code, isNull);
+      expect(task.id, isNull);
     });
 
-    test('New Task Undo and Redo', () {
+    test('Add Task Undo and Redo', () {
       var task = new Task(concept);
       expect(task, isNotNull);
       task.title = 'writing a tutorial on Dartling';
-      tasks.add(task);
-      expect(tasks.count, equals(++count));
 
       var action = new AddAction(session, tasks, task);
       action.doit();
@@ -244,12 +261,25 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       action.redo();
       expect(tasks.count, equals(++count));
     });
-    test('New Task Undo and Redo with Session', () {
+    test('Remove Task Undo and Redo', () {
+      var title = 'generate json from the model';
+      var task = tasks.findByAttribute('title', title);
+      expect(task, isNotNull);
+
+      var action = new RemoveAction(session, tasks, task);
+      action.doit();
+      expect(tasks.count, equals(--count));
+
+      action.undo();
+      expect(tasks.count, equals(++count));
+
+      action.redo();
+      expect(tasks.count, equals(--count));
+    });
+    test('Add Task Undo and Redo with Session', () {
       var task = new Task(concept);
       expect(task, isNotNull);
       task.title = 'writing a tutorial on Dartling';
-      tasks.add(task);
-      expect(tasks.count, equals(++count));
 
       var action = new AddAction(session, tasks, task);
       action.doit();
@@ -260,39 +290,6 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
 
       session.past.redo();
       expect(tasks.count, equals(++count));
-    });
-    test('Task Actions with Multiple Undos and Redos', () {
-      var task1 = new Task(concept);
-      task1.title = 'writing a tutorial on Dartling';
-
-      var action1 = new AddAction(session, tasks, task1);
-      action1.doit();
-      expect(tasks.count, equals(++count));
-
-      var task2 = new Task(concept);
-      task2.title = 'preparing a course lecture on DOM';
-
-      var action2 = new AddAction(session, tasks, task2);
-      action2.doit();
-      expect(tasks.count, equals(++count));
-
-      //session.past.display();
-
-      session.past.undo();
-      expect(tasks.count, equals(--count));
-      session.past.display();
-
-      session.past.undo();
-      expect(tasks.count, equals(--count));
-      session.past.display();
-
-      session.past.redo();
-      expect(tasks.count, equals(++count));
-      session.past.display();
-
-      session.past.redo();
-      expect(tasks.count, equals(++count));
-      session.past.display();
     });
     test('Undo and Redo Update Task Title', () {
       var title = 'generate json from the model';
@@ -339,7 +336,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       tasks.display(title:'Transaction Redone');
     });
 
-    test('Reactions to Project Actions', () {
+    test('Reactions to Task Actions', () {
       var reaction = new Reaction();
       expect(reaction, isNotNull);
 
@@ -360,6 +357,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(reaction.reactedOnUpdate, isTrue);
       models.cancelActionReaction(reaction);
     });
+
   });
 }
 
@@ -387,3 +385,4 @@ void main() {
   var todoRepo = new TodoRepo();
   testTodoData(todoRepo);
 }
+
