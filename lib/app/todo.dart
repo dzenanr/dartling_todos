@@ -7,7 +7,7 @@ class Todo {
   Tasks _tasks;
 
   Element _todo;
-  Element _completed;
+  InputElement _completed;
   Element _title;
 
   Todo(TodoApp todoApp, this.task) {
@@ -29,7 +29,7 @@ class Todo {
     ''');
 
     _title = _todo.query('#title');
-    Element edit = _todo.query('.edit');
+    InputElement edit = _todo.query('.edit');
 
     _title.on.doubleClick.add((MouseEvent e) {
       _todo.classes.add('editing');

@@ -6,7 +6,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
 
   Todos _todos;
   Element _main = query('#main');
-  Element _completeAll = query('#complete-all');
+  InputElement _completeAll = query('#complete-all');
   Element _footer = query('#footer');
   Element _leftCount = query('#left-count');
   Element _clearCompleted = query('#clear-completed');
@@ -32,7 +32,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
       _updateFooter();
     }
 
-    Element newTodo = query('#new-todo');
+    InputElement newTodo = query('#new-todo');
     newTodo.on.keyPress.add((KeyboardEvent e) {
       if (e.keyCode == KeyCode.ENTER) {
         var title = newTodo.value.trim();
@@ -87,7 +87,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
   }
 
   _possibleErrors() {
-    _errors.innerHTML = '<p>${tasks.errors.toString()}</p>';
+    _errors.innerHtml = '<p>${tasks.errors.toString()}</p>';
     tasks.errors.clear();
   }
 
@@ -101,7 +101,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     var completedLength = tasks.completed.length;
     var leftLength = tasks.left.length;
     _completeAll.checked = (completedLength == tasks.length);
-    _leftCount.innerHTML =
+    _leftCount.innerHtml =
         '<b>${leftLength}</b> todo${leftLength != 1 ? 's' : ''} left';
     if (completedLength == 0) {
       _clearCompleted.style.display = 'none';
