@@ -23,7 +23,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(tasks.count, equals(count));
       concept = tasks.concept;
       expect(concept, isNotNull);
-      expect(concept.attributes.list, isNot(isEmpty));
+      expect(concept.attributes.toList(), isNot(isEmpty));
 
       var design = new Task(concept);
       expect(design, isNotNull);
@@ -43,12 +43,12 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
     });
     tearDown(() {
       tasks.clear();
-      expect(tasks.empty, isTrue);
+      expect(tasks.isEmpty, isTrue);
       count = 0;
     });
     test('Empty Entries Test', () {
       entries.clear();
-      expect(entries.empty, isTrue);
+      expect(entries.isEmpty, isTrue);
     });
 
     test('From Tasks to JSON', () {
@@ -63,9 +63,9 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
     });
     test('From JSON to Task Model', () {
       tasks.clear();
-      expect(tasks.empty, isTrue);
+      expect(tasks.isEmpty, isTrue);
       entries.fromJsonToData();
-      expect(tasks.empty, isFalse);
+      expect(tasks.isEmpty, isFalse);
       tasks.display(title:'From JSON to Task Model');
     });
 
@@ -114,15 +114,15 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
 
     test('Select Tasks by Function', () {
       Tasks generateTasks = tasks.select((task) => task.generate);
-      expect(generateTasks.empty, isFalse);
+      expect(generateTasks.isEmpty, isFalse);
       expect(generateTasks.length, equals(2));
 
       generateTasks.display(title:'Select Tasks by Function');
     });
     test('Select Tasks by Function then Add', () {
       var generateTasks = tasks.select((task) => task.generate);
-      expect(generateTasks.empty, isFalse);
-      expect(generateTasks.source.empty, isFalse);
+      expect(generateTasks.isEmpty, isFalse);
+      expect(generateTasks.source.isEmpty, isFalse);
 
       var programmingTask = new Task(concept);
       programmingTask.title = 'dartling programming';
@@ -134,8 +134,8 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
     });
     test('Select Tasks by Function then Remove', () {
       var generateTasks = tasks.select((task) => task.generate);
-      expect(generateTasks.empty, isFalse);
-      expect(generateTasks.source.empty, isFalse);
+      expect(generateTasks.isEmpty, isFalse);
+      expect(generateTasks.source.isEmpty, isFalse);
 
       var title = 'generate json from the model';
       var task = generateTasks.findByAttribute('title', title);
@@ -148,9 +148,9 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
     });
     test('Order Tasks by Title', () {
       Tasks orderedTasks = tasks.order();
-      expect(orderedTasks.empty, isFalse);
+      expect(orderedTasks.isEmpty, isFalse);
       expect(orderedTasks.count, equals(tasks.count));
-      expect(orderedTasks.source.empty, isFalse);
+      expect(orderedTasks.source.isEmpty, isFalse);
       expect(orderedTasks.source.count, equals(tasks.count));
 
       orderedTasks.display(title:'Order Tasks by Title');
@@ -158,7 +158,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
 
     test('Copy Tasks', () {
       Tasks copiedTasks = tasks.copy();
-      expect(copiedTasks.empty, isFalse);
+      expect(copiedTasks.isEmpty, isFalse);
       expect(copiedTasks.count, equals(tasks.count));
       expect(copiedTasks, isNot(same(tasks)));
       expect(copiedTasks, equals(tasks));

@@ -25,7 +25,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     //load todos
     String json = window.localStorage['todos'];
     if (json != null) {
-      tasks.fromJson(JSON.parse(json));
+      tasks.fromJson(parse(json));
       for (Task task in tasks) {
         _todos.add(task);
       }
@@ -83,7 +83,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
   }
 
   _save() {
-    window.localStorage['todos'] = JSON.stringify(tasks.toJson());
+    window.localStorage['todos'] = stringify(tasks.toJson());
   }
 
   _possibleErrors() {
