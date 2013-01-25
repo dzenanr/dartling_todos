@@ -161,7 +161,9 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(copiedTasks.isEmpty, isFalse);
       expect(copiedTasks.length, equals(tasks.length));
       expect(copiedTasks, isNot(same(tasks)));
-      //expect(copiedTasks, equals(tasks));
+      expect(copiedTasks, isNot(equals(tasks)));
+      copiedTasks.forEach((ct) =>
+          expect(ct, equals(tasks.find(ct.oid))));
       copiedTasks.forEach((ct) =>
           expect(ct, isNot(same(tasks.findByAttribute('title', ct.title)))));
       copiedTasks.display(title:'Copied Tasks');
