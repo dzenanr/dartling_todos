@@ -10,7 +10,7 @@ class Todos {
   Element _completedElements = query('#filters a[href="#/completed"]');
 
   Todos(this._todoApp) {
-    window.on.hashChange.add((e) => updateFilter());
+    window.onHashChange.listen((e) => updateFilter());
   }
 
   Todo _find(Task task) {
