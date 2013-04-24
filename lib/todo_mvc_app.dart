@@ -32,17 +32,15 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 library todo_mvc_app;
 
 import "dart:json";
 import "dart:html";
 import "dart:math";
 
-import "package:dartling/dartling.dart";
-import "package:dartling/dartling_app.dart";
+import 'package:dartling/dartling.dart';
 
-import "package:todo_mvc/todo_mvc.dart";
+import 'package:todo_mvc/todo_mvc.dart';
 
 // added by hand
 part 'app/todo_app.dart';

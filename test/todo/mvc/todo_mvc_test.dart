@@ -147,13 +147,11 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(tasks.length, equals(--length));
     });
     test('Order Tasks by Title', () {
-      Tasks orderedTasks = tasks.order();
-      expect(orderedTasks.isEmpty, isFalse);
-      expect(orderedTasks.length, equals(tasks.length));
-      expect(orderedTasks.source.isEmpty, isFalse);
-      expect(orderedTasks.source.length, equals(tasks.length));
-
-      orderedTasks.display(title:'Order Tasks by Title');
+      var length = tasks.length;
+      tasks.order();
+      expect(tasks.isEmpty, isFalse);
+      expect(tasks.length, equals(length));
+      tasks.display(title:'Order Tasks by Title');
     });
 
     test('Copy Tasks', () {
