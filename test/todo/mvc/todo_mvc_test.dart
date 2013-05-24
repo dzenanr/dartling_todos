@@ -94,12 +94,12 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
 
     test('Find Task by New Oid', () {
       var oid = new Oid.ts(1345648254063);
-      var task = tasks.find(oid);
+      var task = tasks.singleWhereOid(oid);
       expect(task, isNull);
     });
     test('Find Task by Attribute', () {
       var title = 'generate json from the model';
-      var task = tasks.findByAttribute('title', title);
+      var task = tasks.firstWhereAttribute('title', title);
       expect(task, isNotNull);
       expect(task.title, equals(title));
     });
@@ -113,14 +113,14 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
     });
 
     test('Select Tasks by Function', () {
-      Tasks generateTasks = tasks.select((task) => task.generate);
+      Tasks generateTasks = tasks.selectWhere((task) => task.generate);
       expect(generateTasks.isEmpty, isFalse);
       expect(generateTasks.length, equals(2));
 
       generateTasks.display(title:'Select Tasks by Function');
     });
     test('Select Tasks by Function then Add', () {
-      var generateTasks = tasks.select((task) => task.generate);
+      var generateTasks = tasks.selectWhere((task) => task.generate);
       expect(generateTasks.isEmpty, isFalse);
       expect(generateTasks.source.isEmpty, isFalse);
 
@@ -133,12 +133,12 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       tasks.display(title:'All Tasks');
     });
     test('Select Tasks by Function then Remove', () {
-      var generateTasks = tasks.select((task) => task.generate);
+      var generateTasks = tasks.selectWhere((task) => task.generate);
       expect(generateTasks.isEmpty, isFalse);
       expect(generateTasks.source.isEmpty, isFalse);
 
       var title = 'generate json from the model';
-      var task = generateTasks.findByAttribute('title', title);
+      var task = generateTasks.firstWhereAttribute('title', title);
       expect(task, isNotNull);
       expect(task.title, equals(title));
       var generatelength = generateTasks.length;
@@ -161,9 +161,9 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       expect(copiedTasks, isNot(same(tasks)));
       expect(copiedTasks, isNot(equals(tasks)));
       copiedTasks.forEach((ct) =>
-          expect(ct, equals(tasks.find(ct.oid))));
+          expect(ct, equals(tasks.singleWhereOid(ct.oid))));
       copiedTasks.forEach((ct) =>
-          expect(ct, isNot(same(tasks.findByAttribute('title', ct.title)))));
+          expect(ct, isNot(same(tasks.firstWhereAttribute('title', ct.title)))));
       copiedTasks.display(title:'Copied Tasks');
     });
     test('Copy Equality', () {
@@ -191,13 +191,13 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
 
     test('Find Task then Set Oid with Failure', () {
       var title = 'generate json from the model';
-      var task = tasks.findByAttribute('title', title);
+      var task = tasks.firstWhereAttribute('title', title);
       expect(task, isNotNull);
       expect(() => task.oid = new Oid.ts(1345648254063), throws);
     });
     test('Find Task then Set Oid with Success', () {
       var title = 'generate json from the model';
-      var task = tasks.findByAttribute('title', title);
+      var task = tasks.firstWhereAttribute('title', title);
       expect(task, isNotNull);
       task.display(prefix:'before oid set: ');
       task.concept.updateOid = true;
@@ -230,7 +230,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
       copiedTask.concept.updateOid = false;
       // Entities.update can only be used if oid, code or id set.
       tasks.update(task, copiedTask);
-      var foundTask = tasks.findByAttribute('title', task.title);
+      var foundTask = tasks.firstWhereAttribute('title', task.title);
       expect(foundTask, isNotNull);
       expect(foundTask.oid, equals(copiedTask.oid));
       // Entities.update removes the before update entity and
@@ -240,7 +240,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
     });
     test('Find Task by Attribute then Examine Code and Id', () {
       var title = 'generate json from the model';
-      var task = tasks.findByAttribute('title', title);
+      var task = tasks.firstWhereAttribute('title', title);
       expect(task, isNotNull);
       expect(task.code, isNull);
       expect(task.id, isNull);
@@ -263,7 +263,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
     });
     test('Remove Task Undo and Redo', () {
       var title = 'generate json from the model';
-      var task = tasks.findByAttribute('title', title);
+      var task = tasks.firstWhereAttribute('title', title);
       expect(task, isNotNull);
 
       var action = new RemoveAction(session, tasks, task);
@@ -293,7 +293,7 @@ testTodoMvc(Repo repo, String domainCode, String modelCode) {
     });
     test('Undo and Redo Update Task Title', () {
       var title = 'generate json from the model';
-      var task = tasks.findByAttribute('title', title);
+      var task = tasks.firstWhereAttribute('title', title);
       expect(task, isNotNull);
       expect(task.title, equals(title));
 

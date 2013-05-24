@@ -1,12 +1,8 @@
 name: todo_mvc
+version: 0.0.9
 author: Dzenan Ridjanovic <dzenanr@gmail.com>
+description: Todo.Mvc is a demo, done with Dartling, of the TodoMVC project. Based on TodoMVC in Dart. Dartling is a domain model framework for web application prototypes. A new dartling project is copied and adapted from dartling_skeleton.
 homepage: http://ondart.me/
-version: 0.0.2
-description: >
-  Todo.Mvc is a demo, done with Dartling, of the TodoMVC project.
-  Based on TodoMVC in Dart.
-  Dartling is a domain model framework for web application prototypes.
-  A new dartling project is copied and adapted from dartling_skeleton.
 dependencies:
   browser: any
   dartling:

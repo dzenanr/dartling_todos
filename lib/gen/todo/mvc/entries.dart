@@ -9,13 +9,13 @@ class MvcEntries extends ModelEntries {
   Map<String, Entities> newEntries() {
     var entries = new Map<String, Entities>();
     var concept;
-    concept = model.concepts.findByCode("Task");
+    concept = model.concepts.singleWhereCode("Task");
     entries["Task"] = new Tasks(concept);
     return entries;
   }
 
   Entities newEntities(String conceptCode) {
-    var concept = model.concepts.findByCode(conceptCode);
+    var concept = model.concepts.singleWhereCode(conceptCode);
     if (concept == null) {
       throw new ConceptError("${conceptCode} concept does not exist.") ;
     }
@@ -25,7 +25,7 @@ class MvcEntries extends ModelEntries {
   }
 
   ConceptEntity newEntity(String conceptCode) {
-    var concept = model.concepts.findByCode(conceptCode);
+    var concept = model.concepts.singleWhereCode(conceptCode);
     if (concept == null) {
       throw new ConceptError("${conceptCode} concept does not exist.") ;
     }
