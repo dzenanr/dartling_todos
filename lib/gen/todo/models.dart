@@ -9,7 +9,7 @@ class TodoModels extends DomainModels {
   }
 
   MvcEntries fromJsonToMvcEntries() {
-    return new MvcEntries(fromMagicBoxes(
+    return new MvcEntries(fromJsonToModel(
       todoMvcModelJson,
       domain,
       TodoRepo.todoMvcModelCode));

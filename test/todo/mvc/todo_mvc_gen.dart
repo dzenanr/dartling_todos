@@ -14,7 +14,7 @@ genCode() {
   // change Skeleton to YourModelName
   // change "Skeleton" to "YourModelName"
   Model todoMvcModel =
-      fromMagicBoxes(todoMvcModelJson, todoDomain, "Mvc");
+      fromJsonToModel(todoMvcModelJson, todoDomain, "Mvc");
 
   repo.domains.add(todoDomain);
 

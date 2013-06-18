@@ -30,6 +30,8 @@ var todoMvcModelJson = r'''
                     "category":"required",
                     "name":"title",
                     "type":"String",
+                    "essential":true,
+                    "sensitive":false,
                     "init":""
                 },
                 {
@@ -37,6 +39,8 @@ var todoMvcModelJson = r'''
                     "category":"required",
                     "name":"completed",
                     "type":"bool",
+                    "essential":true,
+                    "sensitive":false,
                     "init":"false"
                 }
             ]
