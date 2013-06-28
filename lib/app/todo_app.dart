@@ -32,14 +32,14 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
       _updateFooter();
     }
 
-    InputElement _newTodo = query('#new-todo');
-    _newTodo.onKeyPress.listen((KeyboardEvent e) {
+    InputElement newTodo = query('#new-todo');
+    newTodo.onKeyPress.listen((KeyboardEvent e) {
       if (e.keyCode == KeyCode.ENTER) {
-        var title = _newTodo.value.trim();
+        var title = newTodo.value.trim();
         if (title != '') {
           var task = new Task(tasks.concept);
           task.title = title;
-          _newTodo.value = '';
+          newTodo.value = '';
           new AddAction(session, tasks, task).doit();
           _possibleErrors();
         }
