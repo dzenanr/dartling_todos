@@ -1,11 +1,3 @@
-part of todo_mvc;
-
-// http://www.json.org/
-// http://jsonformatter.curiousconcept.com/
-
-// lib/dartling/skeleton/json/model.dart
-
-var todoMvcModelJson = r'''
 {
     "width":990,
     "lines":[
@@ -43,4 +35,3 @@ var todoMvcModelJson = r'''
         }
     ]
 }
-''';

@@ -2,7 +2,6 @@ part of todo_mvc_app;
 
 class Todos {
   TodoApp _todoApp;
-
   List<Todo> _todoList = new List<Todo>();
   Element _todoElements = query('#todo-list');
   Element _allElements = query('#filters a[href="#/"]');
@@ -15,7 +14,7 @@ class Todos {
 
   Todo _find(Task task) {
     for (Todo todo in _todoList) {
-      if (todo.task == task) {
+      if (todo._task == task) {
         return todo;
       }
     }
@@ -73,14 +72,14 @@ class Todos {
   showLeft() {
     _setSelectedFilter(_leftElements);
     for (Todo todo in _todoList) {
-      todo.visible = todo.task.left;
+      todo.visible = todo._task.left;
     }
   }
 
   void showCompleted() {
     _setSelectedFilter(_completedElements);
     for (Todo todo in _todoList) {
-      todo.visible = todo.task.completed;
+      todo.visible = todo._task.completed;
     }
   }
 
