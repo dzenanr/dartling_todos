@@ -14,7 +14,7 @@ class Todos {
 
   Todo _find(Task task) {
     for (Todo todo in _todoList) {
-      if (todo._task == task) {
+      if (todo.task == task) {
         return todo;
       }
     }
@@ -72,14 +72,14 @@ class Todos {
   showLeft() {
     _setSelectedFilter(_leftElements);
     for (Todo todo in _todoList) {
-      todo.visible = todo._task.left;
+      todo.visible = todo.task.left;
     }
   }
 
   void showCompleted() {
     _setSelectedFilter(_completedElements);
     for (Todo todo in _todoList) {
-      todo.visible = todo._task.completed;
+      todo.visible = todo.task.completed;
     }
   }
 

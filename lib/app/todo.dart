@@ -1,29 +1,30 @@
 part of todo_mvc_app;
 
 class Todo {
-  DomainSession _session;
-  Task _task;
+  Task task;
+
   Tasks _tasks;
+  DomainSession _session;
 
   Element _todo;
   InputElement _completed;
   Element _title;
 
-  Todo(TodoApp todoApp, this._task) {
+  Todo(TodoApp todoApp, this.task) {
     _session = todoApp.session;
     _tasks = todoApp.tasks;
   }
 
   Element create() {
     _todo = new Element.html('''
-      <li ${_task.completed ? 'class="completed"' : ''}>
+      <li ${task.completed ? 'class="completed"' : ''}>
         <div class='view'>
           <input class='completed' type='checkbox'
-            ${_task.completed ? 'checked' : ''}>
-          <label id='title'>${_task.title}</label>
+            ${task.completed ? 'checked' : ''}>
+          <label id='title'>${task.title}</label>
           <button class='remove'></button>
         </div>
-        <input class='edit' value='${_task.title}'>
+        <input class='edit' value='${task.title}'>
       </li>
     ''');
 
@@ -39,19 +40,19 @@ class Todo {
       if (e.keyCode == KeyCode.ENTER) {
         var value = edit.value.trim();
         if (value != '') {
-          new SetAttributeAction(_session, _task, 'title', value).doit();
+          new SetAttributeAction(_session, task, 'title', value).doit();
         }
       }
     });
 
     _completed = _todo.query('.completed');
     _completed.onClick.listen((MouseEvent e) {
-      new SetAttributeAction(_session, _task, 'completed',
-          !_task.completed).doit();
+      new SetAttributeAction(_session, task, 'completed',
+          !task.completed).doit();
     });
 
     _todo.query('.remove').onClick.listen((MouseEvent e) {
-      var action = new RemoveAction(_session, _tasks, _task).doit();
+      var action = new RemoveAction(_session, _tasks, task).doit();
     });
 
     return _todo;
