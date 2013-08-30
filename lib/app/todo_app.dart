@@ -25,7 +25,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     //load todos
     String json = window.localStorage['todos'];
     if (json != null) {
-      tasks.fromJson(parse(json));
+      tasks.fromJson(JSON.decode(json));
       for (Task task in tasks) {
         _todos.add(task);
       }
@@ -83,7 +83,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
   }
 
   _save() {
-    window.localStorage['todos'] = stringify(tasks.toJson());
+    window.localStorage['todos'] = JSON.encode(tasks.toJson());
   }
 
   _possibleErrors() {
@@ -123,7 +123,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     }
 
     if (action is Transaction) {
-      for (var transactionAction in action.past.actions) {
+      for (var transactionAction in (action as Transaction).past.actions) {
         if (transactionAction is SetAttributeAction) {
           updateTodo(transactionAction);
         } else if (transactionAction is RemoveAction) {
@@ -136,15 +136,15 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
       }
     } else if (action is AddAction) {
       if (action.undone) {
-        _todos.remove(action.entity);
+        _todos.remove((action as AddAction).entity);
       } else {
-        _todos.add(action.entity);
+        _todos.add((action as AddAction).entity);
       }
     } else if (action is RemoveAction) {
       if (action.undone) {
-        _todos.add(action.entity);
+        _todos.add((action as RemoveAction).entity);
       } else {
-        _todos.remove(action.entity);
+        _todos.remove((action as RemoveAction).entity);
       }
     } else if (action is SetAttributeAction) {
       updateTodo(action);
