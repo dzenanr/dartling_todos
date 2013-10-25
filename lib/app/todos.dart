@@ -3,10 +3,10 @@ part of todo_mvc_app;
 class Todos {
   TodoApp _todoApp;
   List<Todo> _todoList = new List<Todo>();
-  Element _todoElements = query('#todo-list');
-  Element _allElements = query('#filters a[href="#/"]');
-  Element _leftElements = query('#filters a[href="#/left"]');
-  Element _completedElements = query('#filters a[href="#/completed"]');
+  Element _todoElements = querySelector('#todo-list');
+  Element _allElements = querySelector('#filters a[href="#/"]');
+  Element _leftElements = querySelector('#filters a[href="#/left"]');
+  Element _completedElements = querySelector('#filters a[href="#/completed"]');
 
   Todos(this._todoApp) {
     window.onHashChange.listen((e) => updateFilter());
