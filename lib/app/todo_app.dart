@@ -123,7 +123,7 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
     }
 
     if (action is Transaction) {
-      for (var transactionAction in (action as Transaction).past.actions) {
+      for (var transactionAction in action.past.actions) {
         if (transactionAction is SetAttributeAction) {
           updateTodo(transactionAction);
         } else if (transactionAction is RemoveAction) {
@@ -136,15 +136,15 @@ class TodoApp implements ActionReactionApi, PastReactionApi {
       }
     } else if (action is AddAction) {
       if (action.undone) {
-        _todos.remove((action as AddAction).entity);
+        _todos.remove(action.entity);
       } else {
-        _todos.add((action as AddAction).entity);
+        _todos.add(action.entity);
       }
     } else if (action is RemoveAction) {
       if (action.undone) {
-        _todos.add((action as RemoveAction).entity);
+        _todos.add(action.entity);
       } else {
-        _todos.remove((action as RemoveAction).entity);
+        _todos.remove(action.entity);
       }
     } else if (action is SetAttributeAction) {
       updateTodo(action);
