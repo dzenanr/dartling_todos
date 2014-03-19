@@ -3,6 +3,7 @@ version: 0.1.0
 author: Dzenan Ridjanovic <dzenanr@gmail.com>
 description: Todo.Mvc is a demo, done with dartling, of the TodoMVC project. Based on TodoMVC in Dart. dartling is a domain model framework.
 homepage: http://ondart.me/
+documentation: http://goo.gl/VGH8KP
 environment:
   sdk: '>=0.8.10+8 <2.0.0'
 dependencies:
