@@ -18,6 +18,7 @@ class Todos {
         return todo;
       }
     }
+    return null;
   }
 
   add(Task task) {
