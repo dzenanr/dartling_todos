@@ -26,4 +26,13 @@ dependencies:
     path: 'C:\Users\ridjanod.FSA-RIDJANOD-2\dart\model\dartling'
   dartling_default_app:
     path: 'C:\Users\ridjanod.FSA-RIDJANOD-2\dart\model\dartling_default_app'
+    
+dependencies:
+  browser: any
+  dartling:
+    path: /home/dzenanr/dart/model/dartling
+  dartling_default_app:
+    path: /home/dzenanr/dart/model/dartling_default_app
+    
+
   
