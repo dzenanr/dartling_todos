@@ -9,6 +9,6 @@ environment:
 dependencies:
   browser: any
   dartling:
-    git: 'https://github.com/dzenanr/dartling.git'
+    git: git://github.com/dzenanr/dartling.git
   dartling_default_app:
-    git: 'https://github.com/dzenanr/dartling_default_app.git'
+    git: git://github.com/dzenanr/dartling_default_app.git
